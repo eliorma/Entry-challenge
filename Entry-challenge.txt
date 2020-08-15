@@ -1,0 +1,66 @@
+elior_read.me
+
+# create linux ubuntu vm
+install Oracle VM whit image linux ubuntu
+
+# command for install maven on linux ubuntu
+apt-get install -y maven
+apt install docker.io
+docker pull jenkins/jenkins
+
+# Configure Maven in Jenkins settings
+
+# repo_HelloWorldMaven_pipline
+pipeline { 
+    agent any 
+    stages {
+        stage('Build') { 
+            steps {
+                withMaven(maven : 'apache-maven-3.3.9'){
+                        bat "mvn clean compile"
+                }
+            }
+        }
+        stage('Test'){
+            steps {
+                withMaven(maven : 'apache-maven-3.3.9'){
+                        bat "mvn test"
+                }
+
+            }
+        }
+        stage('Deploy') {
+            steps {
+               withMaven(maven : 'apache-maven-3.3.9'){
+                        bat "mvn deploy"
+                }
+
+            }
+        }
+    }
+}
+
+
+
+# Checkout code
+http://localhost:8080/job/Maven/configure >>  Source Code Management
+
+
+# Use Maven to compile the project
+$ mvn compiler:compile
+...
+[INFO] --- maven-compiler-plugin:3.8.1:compile (default-cli) @ maven-example-jar ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 1 source file to /Users/pankaj/Desktop/maven-examples/maven-example-jar/target/classes
+...
+$
+
+
+# Clean workspace after successful run
+You can use deleteDir() as the last step of the pipeline Jenkinsfile
+
+# Run the job and make sure it finishes successfully
+1. Go to General tab
+2. Click on ADVANCED button
+3. Check Quiet Period and enter 60 (= 1 minute)
+4. Save
